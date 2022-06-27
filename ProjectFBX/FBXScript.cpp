@@ -7,6 +7,8 @@
 // inclus la definition de DWORD
 #include <IntSafe.h>
 
+#include <Vector>
+
 
 extern "C"
 {
@@ -36,11 +38,23 @@ FbxScene* m_scene;
 void AddMesh(FbxNode* node, FbxNode* parent)
 {
 
+	std::vector<FbxVector4> position[1];
+	int controlPointIndex = 0;
+
+	int nbControlPoint;
+
 	std::cout << "mesh" << std::endl;
 
-	//FbxMesh* mesh = node->;
+	FbxMesh* mesh = node->GetMesh();
 
-	//FbxVector4 position = mesh->GetControlPointAt(controlPointIndex);
+	nbControlPoint = mesh->GetControlPointsCount();
+
+	position->resize(nbControlPoint);
+
+	for (int i = 0; i < nbControlPoint; i++) {
+		position[i] = mesh->GetControlPointAt(i);
+	}
+
 }
 
 void Terminate()
