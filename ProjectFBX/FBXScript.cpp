@@ -3,9 +3,10 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#include <windows.h>
 // inclus la definition de DWORD
 #include <IntSafe.h>
+
 
 extern "C"
 {
@@ -23,8 +24,24 @@ extern "C"
 
 #include <iostream>
 
+
+
+
+
 FbxManager* m_fbxManager;
 FbxScene* m_scene;
+
+
+
+void AddMesh(FbxNode* node, FbxNode* parent)
+{
+
+	std::cout << "mesh" << std::endl;
+
+	//FbxMesh* mesh = node->;
+
+	//FbxVector4 position = mesh->GetControlPointAt(controlPointIndex);
+}
 
 void Terminate()
 {
@@ -41,7 +58,7 @@ void Initialize()
 void LoadFBX() {
 	m_scene = FbxScene::Create(m_fbxManager, "Ma Scene");
 	FbxImporter* importer = FbxImporter::Create(m_fbxManager, "");
-	bool status = importer->Initialize("cube01.fbx", -1, m_fbxManager -> GetIOSettings());
+	bool status = importer->Initialize("../ironman/ironman.fbx", -1, m_fbxManager->GetIOSettings());
 	status = importer->Import(m_scene);
 	importer->Destroy();
 }
@@ -56,6 +73,46 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
+void ProcessNode(FbxNode* node, FbxNode* parent) {
+	//
+	// insérer TRAITEMENT DU NODE, cf plus bas
+	//
+
+	FbxNodeAttribute* att = node->GetNodeAttribute();
+
+	if (att != NULL)
+	{
+		FbxNodeAttribute::EType type = att->GetAttributeType();
+
+		switch (type)
+		{
+		case FbxNodeAttribute::eMesh:
+			AddMesh(node, parent);
+			break;
+
+		case FbxNodeAttribute::eSkeleton:
+			// illustratif, nous traiterons du cas des squelettes 
+			// dans une fonction spécifique
+			//AddJoint(node, parent);
+			break;
+			//…
+		}
+	}
+	
+
+
+
+	int childCount = node->GetChildCount();
+	for (int i = 0; i < childCount; i++) 
+	{
+		FbxNode* child = node->GetChild(i);
+		ProcessNode(child, node);
+	}
+}
+
+
+
 
 int main(void) {
 
@@ -81,6 +138,13 @@ int main(void) {
 	glfwSetKeyCallback(window, key_callback);
 
 	Initialize();
+
+	LoadFBX();
+
+	FbxNode* root_node = m_scene->GetRootNode();
+
+	ProcessNode(root_node, NULL);
+
 
 	while (!glfwWindowShouldClose(window))
 	{
