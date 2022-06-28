@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <windows.h>
+#include <glm/glm.hpp>
 // inclus la definition de DWORD
 #include <IntSafe.h>
 
@@ -38,7 +39,7 @@ FbxScene* m_scene;
 void AddMesh(FbxNode* node, FbxNode* parent)
 {
 
-	std::vector<FbxVector4> position[1];
+	std::vector<glm::vec3> positions[1];
 	int controlPointIndex = 0;
 
 	int nbControlPoint;
@@ -49,10 +50,10 @@ void AddMesh(FbxNode* node, FbxNode* parent)
 
 	nbControlPoint = mesh->GetControlPointsCount();
 
-	position->resize(nbControlPoint);
+	//position->resize(nbControlPoint);
 
 	for (int i = 0; i < nbControlPoint; i++) {
-		position[i] = mesh->GetControlPointAt(i);
+		FbxVector4 position = mesh->GetControlPointAt(i);
 	}
 
 }
