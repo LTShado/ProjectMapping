@@ -61,6 +61,24 @@ void AddMesh(FbxNode* node, FbxNode* parent)
 
 }
 
+void Display(GLFWwindow* window)
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	glClearColor(1.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// active le tri des faces
+	glEnable(GL_DEPTH_TEST);
+	// on peut egalement modifier la fonction de test
+	//glDepthFunc(GL_LEQUAL); // par ex: en inferieur ou egal
+	// active la suppression des faces arrieres
+	glEnable(GL_CULL_FACE);
+
+	// Defini le viewport en pleine fenetre
+	glViewport(0, 0, width, height);
+}
+
 void Terminate()
 {
 	m_scene->Destroy();
@@ -167,7 +185,7 @@ int main(void) {
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwSwapBuffers(window);
-
+		Display(window);
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
