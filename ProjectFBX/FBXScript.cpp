@@ -50,11 +50,14 @@ void AddMesh(FbxNode* node, FbxNode* parent)
 
 	nbControlPoint = mesh->GetControlPointsCount();
 
-	//position->resize(nbControlPoint);
+	positions->resize(nbControlPoint);
 
 	for (int i = 0; i < nbControlPoint; i++) {
 		FbxVector4 position = mesh->GetControlPointAt(i);
+		positions->emplace_back(glm::vec3((float)position[0], (float)position[1],
+			(float)position[2]));
 	}
+
 
 }
 
