@@ -57,6 +57,24 @@ void AddMesh(FbxNode* node, FbxNode* parent)
 		positions->emplace_back(glm::vec3((float)position[0], (float)position[1],
 			(float)position[2]));
 	}
+	std::vector<bool> normals[1];
+	std::vector<int> vertexes[1];
+	int nbVertex = 0;
+	int nbPoly = 0;
+	nbPoly = mesh->GetPolygonCount();
+	nbVertex = mesh->GetPolygonVertexCount();
+	normals->resize(nbVertex);
+	vertexes->resize(nbVertex);
+	for (int i = 0; i < nbPoly; i++) {
+		int p = mesh->GetPolygonSize(i);
+		for (int j = 0; j < p; j++) {
+			vertexes->push_back(mesh->GetPolygonVertex(i, j));
+			FbxVector4 normal;
+			normals->push_back(mesh->GetPolygonVertexNormal(i, j, normal));
+
+		}
+	}
+
 
 
 }
